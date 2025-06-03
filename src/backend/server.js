@@ -7,6 +7,11 @@ const PORT = 3001;
 app.use(express.json());
 app.use(cors());
 
+// Přidání této GET cesty pro základní kontrolu
+app.get("/", (req, res) => {
+  res.send("API běží správně – připraveno přijímat rezervace.");
+});
+
 app.post("/booking", (req, res) => {
   const { name, email, date, message } = req.body;
   console.log("Přišla rezervace:", req.body);
@@ -15,5 +20,5 @@ app.post("/booking", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server běží na http://localhost:${PORT}`);
+  console.log(`✅ Server běží na http://localhost:${PORT}`);
 });
