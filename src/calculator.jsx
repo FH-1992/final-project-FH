@@ -1,21 +1,38 @@
-import { useState } from "react";
+import "./calculator.css";
+
+import { useEffect, useState } from "react";
 
 export default function PaintPriceCalculator() {
   const [area, setArea] = useState("");
   const [colorType, setColorType] = useState("bila");
 
+  useEffect(() => {
+    const savedArea = localStorage.getItem("paint_area");
+    const savedColor = localStorage.getItem("paint_color");
+
+    if (savedArea) setArea(savedArea);
+    if (savedColor) setColorType(savedColor);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("paint_area", area);
+  }, [area]);
+
+  useEffect(() => {
+    localStorage.setItem("paint_color", colorType);
+  }, [colorType]);
+
   const numericArea = parseFloat(area);
   const isValidArea = !isNaN(numericArea) && numericArea > 0;
 
   const pricePerSquareMeter = colorType === "bila" ? 60 : 75;
-
   const totalPrice = isValidArea ? numericArea * pricePerSquareMeter : 0;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gray-50 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4 text-center">Painting price</h2>
+    <div className="calculator-container">
+      <h2 className="calculator-title">Painting price</h2>
 
-      <label className="block mb-2 font-semibold" htmlFor="area">
+      <label htmlFor="area" className="form-label">
         Zadejte plochu v m²:
       </label>
       <input
@@ -26,37 +43,35 @@ export default function PaintPriceCalculator() {
         value={area}
         onChange={(e) => setArea(e.target.value)}
         placeholder="např. 100"
-        className="w-full p-2 mb-4 border rounded"
+        className="form-input"
       />
 
-      <label className="block mb-2 font-semibold">Vyberte barvu:</label>
-      <div className="mb-4">
-        <label className="mr-4">
+      <label className="form-label">Vyberte barvu:</label>
+      <div className="color-options">
+        <label className="color-option">
           <input
             type="radio"
             name="colorType"
             value="bila"
             checked={colorType === "bila"}
             onChange={() => setColorType("bila")}
-            className="mr-1"
           />
           Bílá (60 Kč/m²)
         </label>
 
-        <label>
+        <label className="color-option">
           <input
             type="radio"
             name="colorType"
             value="barevna"
             checked={colorType === "barevna"}
             onChange={() => setColorType("barevna")}
-            className="mr-1"
           />
           Barevná (75 Kč/m²)
         </label>
       </div>
 
-      <div className="text-center text-xl font-bold">
+      <div className="price-result">
         Cena: {isValidArea ? totalPrice.toLocaleString("cs-CZ") + " Kč" : "-"}
       </div>
     </div>
