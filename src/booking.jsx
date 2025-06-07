@@ -1,3 +1,5 @@
+import "./booking.css";
+
 import { useState } from "react";
 
 export default function BookingPage() {
@@ -14,72 +16,84 @@ export default function BookingPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Zde bys poslal data na server přes fetch nebo axios
-    console.log("Rezervace odeslána:", form);
-    setSubmitted(true);
+
+    try {
+      const response = await fetch("http://localhost:3001/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        alert("Chyba při odesílání: " + (data.message || "Neznámá chyba"));
+      }
+    } catch (error) {
+      alert("Chyba serveru: " + error.message);
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold text-center mb-6">
-        Rezervace malování
-      </h2>
+    <div className="booking-container">
+      <h2 className="booking-title">Rezervace malování</h2>
 
       {submitted ? (
-        <p className="text-green-600 text-center font-semibold">
+        <p className="booking-success">
           Děkujeme! Vaše rezervace byla odeslána.
         </p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block font-medium mb-1">Jméno</label>
+        <form onSubmit={handleSubmit} className="booking-form">
+          <div className="form-group">
+            <label className="form-label">Jméno</label>
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2 rounded"
+              className="form-input"
             />
           </div>
-          <div>
-            <label className="block font-medium mb-1">E-mail</label>
+          <div className="form-group">
+            <label className="form-label">E-mail</label>
             <input
               type="email"
               name="email"
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2 rounded"
+              className="form-input"
             />
           </div>
-          <div>
-            <label className="block font-medium mb-1">Datum</label>
+          <div className="form-group">
+            <label className="form-label">Datum</label>
             <input
               type="date"
               name="date"
               value={form.date}
               onChange={handleChange}
               required
-              className="w-full border px-3 py-2 rounded"
+              className="form-input"
             />
           </div>
-          <div>
-            <label className="block font-medium mb-1">Zpráva / poznámka</label>
+          <div className="form-group">
+            <label className="form-label">Zpráva / poznámka</label>
             <textarea
               name="message"
               value={form.message}
               onChange={handleChange}
               rows="4"
-              className="w-full border px-3 py-2 rounded"
+              className="form-input"
             ></textarea>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          >
+          <button type="submit" className="submit-button">
             Odeslat rezervaci
           </button>
         </form>

@@ -3,7 +3,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background-color: #c4e2e7; /* světle modrá */
+  background-color: #e2e7e7; /* světle modrá */
   color: #333;
 }
 
@@ -27,7 +27,7 @@ p.subtitle {
 }
 
 button {
-  background: linear-gradient(to right, #2a60c3, #4b9cf7);
+  background: linear-gradient(to right, #2ac33e, #4b9cf7);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
